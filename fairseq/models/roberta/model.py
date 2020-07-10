@@ -98,6 +98,8 @@ class RobertaModel(FairseqEncoderModel):
                             help='scalar quantization noise and scalar quantization at training time')
         parser.add_argument('--untie-weights-roberta', action='store_true',
                             help='Untie weights between embeddings and classifiers in RoBERTa')
+        # args for Sambanova internal usage
+        parser.add_argument('--freeze-embeddings', action='store_true', help='Free embeddings')
 
     @classmethod
     def build_model(cls, args, task):
@@ -307,6 +309,7 @@ class RobertaEncoder(FairseqEncoder):
             activation_fn=args.activation_fn,
             q_noise=args.quant_noise_pq,
             qn_block_size=args.quant_noise_pq_block_size,
+            freeze_embeddings=args.freeze_embeddings if "freeze_embeddings" in args else False
         )
         args.untie_weights_roberta = getattr(args, 'untie_weights_roberta', False)
 

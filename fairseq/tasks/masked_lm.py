@@ -19,6 +19,7 @@ from fairseq.data import (
     PadDataset,
     PrependTokenDataset,
     SortDataset,
+    SubsampleDataset,
     TokenBlockDataset,
 )
 from fairseq.data.shorten_dataset import maybe_shorten_dataset

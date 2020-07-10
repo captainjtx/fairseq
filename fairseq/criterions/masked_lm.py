@@ -31,6 +31,7 @@ class MaskedLmLoss(FairseqCriterion):
         3) logging outputs to display while training
         """
         masked_tokens = sample['target'].ne(self.padding_idx)
+
         sample_size = masked_tokens.int().sum()
 
         # Rare: when all tokens are masked, project all tokens.

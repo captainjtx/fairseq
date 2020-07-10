@@ -221,6 +221,12 @@ def train(args, trainer, task, epoch_itr):
         num_updates = trainer.get_num_updates()
         if num_updates % args.log_interval == 0:
             stats = get_training_stats(metrics.get_smoothed_values("train_inner"))
+            if "loss" in stats:
+                with open(f'train_loss{args.distributed_rank}.txt', 'a') as f:
+                    f.write("{}\n".format(stats['loss']))
+            if "lr" in stats:
+                with open(f'lr{args.distributed_rank}.txt', 'a') as f:
+                    f.write("{}\n".format(stats['lr']))
             progress.log(stats, tag="train_inner", step=num_updates)
 
             # reset mid-epoch stats after each log interval
@@ -231,6 +237,9 @@ def train(args, trainer, task, epoch_itr):
         valid_losses, should_stop = validate_and_save(
             args, trainer, task, epoch_itr, valid_subsets, end_of_epoch
         )
+        if valid_losses[-1] is not None:
+            with open(f'valid_loss{args.distributed_rank}.txt', 'a') as f:
+                f.write("{}\n".format(valid_losses[-1]))
         if should_stop:
             break
 
